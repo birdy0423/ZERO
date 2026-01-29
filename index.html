@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Zero 2.0 任務控制中心</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background-color: #000000; 
+            font-family: 'Noto Sans TC', sans-serif; 
+            color: #FFFFFF;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* 視覺主題：護眼極黑、螢光綠、權威感 */
+        .hacker-bg { background: radial-gradient(circle at top right, rgba(26, 86, 50, 0.2), transparent); }
+        .neon-border { border: 2px solid #1A5632; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 1.5rem; cursor: pointer; }
+        .neon-border:hover { border-color: #7FBC3B; box-shadow: 0 0 30px rgba(127, 188, 59, 0.4); transform: translateY(-4px); }
+
+        /* 字體比例 */
+        .title-main { font-size: 3.5rem; font-weight: 900; line-height: 1.1; }
+        .h1-doc { font-size: 2.8rem; font-weight: 900; color: #7FBC3B; border-bottom: 5px solid #1A5632; padding-bottom: 10px; margin-bottom: 25px; }
+        .h2-doc { font-size: 2.2rem; font-weight: 900; color: #FFFFFF; margin: 2rem 0 1rem 0; display: flex; align-items: center; gap: 15px; }
+        .p-doc { font-size: 1.4rem; line-height: 1.7; color: #e2e8f0; font-weight: 500; }
+        .highlight { color: #7FBC3B; font-weight: 900; }
+
+        /* 視圖切換 */
+        .view-content { display: none; width: 100%; animation: fadeIn 0.4s ease-out forwards; }
+        .view-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 返回按鈕 */
+        .btn-home { position: fixed; top: 25px; right: 25px; background: #7FBC3B; color: #000; font-weight: 900; padding: 10px 25px; border-radius: 999px; z-index: 1000; display: none; box-shadow: 0 0 20px rgba(127,188,59,0.5); }
+        .btn-home:hover { transform: scale(1.05); background: #ffffff; }
+
+        /* 內容容器：確保背景深黑防止白屏 */
+        .doc-container {
+            background-color: #0a0a0a;
+            border: 4px solid #1A5632;
+            border-radius: 2rem;
+            padding: 4rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+
+        /* 表格樣式 */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #111; color: #7FBC3B; padding: 15px; text-align: left; border: 1px solid #1A5632; font-weight: 900; font-size: 1.2rem; }
+        td { padding: 15px; border: 1px solid #1A5632; background: #000; color: #fff; font-size: 1.1rem; }
+
+        /* 一頁式簡報間距與標籤 */
+        .pitch-section {
+            border-bottom: 2px dashed #1A5632;
+            padding-bottom: 4rem;
+            margin-bottom: 4rem;
+        }
+        .pitch-section:last-child { border-bottom: none; }
+        .pitch-label { background: #1A5632; color: #7FBC3B; padding: 5px 15px; border-radius: 5px; font-weight: 900; margin-bottom: 1.5rem; display: inline-block; font-size: 1.1rem; }
+
+        .empathy-box { background: #000; border: 1px solid #1A5632; padding: 2rem; border-radius: 1rem; }
+    </style>
+</head>
+<body class="hacker-bg p-8">
+
+    <button onclick="goHome()" id="homeBtn" class="btn-home"><i class="fa-solid fa-house"></i> 返回中心</button>
+
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- [ 首頁視圖：DASHBOARD ] -->
+        <div id="view_home" class="view-content active">
+            <header class="mb-12 border-b-4 border-[#1A5632] pb-8 flex justify-between items-end">
+                <div>
+                    <p class="text-[#7FBC3B] font-black tracking-widest uppercase mb-2 text-lg">Next Zero Task Force</p>
+                    <h1 class="title-main italic">零碳駭客任務<br><span class="text-[#7FBC3B]">全案導覽控制中心</span></h1>
+                </div>
+                <div class="text-right hidden lg:block">
+                    <p class="text-xl font-mono text-slate-500 font-bold">STUST 115 PROJECT</p>
+                    <p class="text-[#7FBC3B] font-black italic">教學全景模式 (整合修復版 v7.0)</p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Column 01 -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-black text-[#7FBC3B] border-l-8 border-[#7FBC3B] pl-4">戰略規劃</h2>
+                    <div onclick="openView('v_calendar')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-calendar-check text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">1-18 週詳細進度</h3>
+                        <p class="text-slate-400 text-sm font-bold">實體、遠端與工作坊的精確分工。</p>
+                    </div>
+                    <div onclick="openView('v_dt_full')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-diagram-project text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">DT 五步完整整合</h3>
+                        <p class="text-slate-400 text-sm font-bold">【細節回填】參訪與數據的設計轉化邏輯。</p>
+                    </div>
+                </div>
+                <!-- Column 02 -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-black text-[#7FBC3B] border-l-8 border-[#7FBC3B] pl-4">偵查工具包</h2>
+                    <div onclick="openView('v_visit')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-industry text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">工廠參訪手冊</h3>
+                        <p class="text-slate-400 text-sm font-bold">【配色修復】銘牌獵尋、非接觸診斷與安全清單。</p>
+                    </div>
+                    <div onclick="openView('v_empathy_dual')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-mask text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">雙向同理心地圖</h3>
+                        <p class="text-slate-400 text-sm font-bold">【細節回填】阿伯 vs 實驗室學姊。</p>
+                    </div>
+                    <div onclick="openView('v_define_hmw')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-flask text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">POV 與 HMW 煉金</h3>
+                        <p class="text-slate-400 text-sm font-bold">將 Bug 轉化為「我們如何...」公式。</p>
+                    </div>
+                </div>
+                <!-- Column 03 -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-black text-[#7FBC3B] border-l-8 border-[#7FBC3B] pl-4">發表實踐</h2>
+                    <div onclick="openView('v_pitch_scrolling')" class="neon-border bg-[#0a0a0a] p-8 border-[#7FBC3B] shadow-lg">
+                        <i class="fa-solid fa-microphone-lines text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">W9 Pitch 7頁詳解</h3>
+                        <p class="text-slate-400 text-sm font-bold">【下拉一頁式】包含打臉 AI 任務表。</p>
+                    </div>
+                    <div onclick="openView('v_tracks')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-road text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">四大賽道實作指南</h3>
+                        <p class="text-slate-400 text-sm font-bold">大二學生能落實的模型標準。</p>
+                    </div>
+                    <div onclick="openView('v_grading')" class="neon-border bg-[#0a0a0a] p-8">
+                        <i class="fa-solid fa-award text-4xl text-[#7FBC3B] mb-4"></i>
+                        <h3 class="text-xl font-black mb-2">等級評定指標</h3>
+                        <p class="text-slate-400 text-sm font-bold">數據主權、社會創新與實作可行性。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW: DT 整合圖 (詳細細節回填)
+             ========================================== -->
+        <div id="v_dt_full" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🛠️ 零碳駭客：設計思考五步實踐指南</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-6 bg-black border-l-8 border-[#7FBC3B] rounded-xl">
+                        <h3 class="text-2xl font-black mb-4">1. 同理觀察 (W2-W4)</h3>
+                        <p class="p-doc italic mb-2">「駭客的眼睛」：建立對現場能耗的感官記憶。</p>
+                        <p class="text-sm text-slate-400">學生在現場感受到的「灼熱」與「刺耳噪音」是同理心的起點。不只看機器，更要看「操作者如何與機器共存」，這就是偵察 User Bug 的第一步。</p>
+                    </div>
+                    <div class="p-6 bg-black border-l-8 border-[#7FBC3B] rounded-xl">
+                        <h3 class="text-2xl font-black mb-4">2. 定義問題 (W5-W6)</h3>
+                        <p class="p-doc italic mb-2">「數據核實」：定義問題的「尺」。</p>
+                        <p class="text-sm text-slate-400">拒絕任何模糊的形容詞。透過計算轉化為「年排放 X 噸碳」。定義問題的含金量在於：誰是那個最該被解決的「碳排 Boss」？</p>
+                    </div>
+                    <div class="p-6 bg-black border-l-8 border-[#7FBC3B] rounded-xl">
+                        <h3 class="text-2xl font-black mb-4">3. 創意發想 (W7-W8)</h3>
+                        <p class="p-doc italic mb-2">「方案煉金」：不只是買設備，而是駭入邏輯。</p>
+                        <p class="text-sm text-slate-400">利用 HMW 發散解方，重點在於針對數據背後的「人性 Bug」進行輕推 (Nudge) 設計。我們不僅要硬體節能，還要讓使用者覺得節能很簡單、很酷。</p>
+                    </div>
+                    <div class="p-6 bg-black border-l-8 border-[#7FBC3B] rounded-xl">
+                        <h3 class="text-2xl font-black mb-4">4/5. 原型與測試 (W9)</h3>
+                        <p class="p-doc italic mb-2">「壓力測試」：Pitch 發表就是第一輪檢驗。</p>
+                        <p class="text-sm text-slate-400">期中的原型不是實體電路，而是「行動計畫書」。透過發表收集導師批評，作為下半學期實作依據。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW: 工廠參訪詳情 (修復配色問題)
+             ========================================== -->
+        <div id="v_visit" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🏭 工廠參訪：非接觸診斷任務</h1>
+                <h2 class="h2-doc"><i class="fa-solid fa-camera"></i> 銘牌標籤獵尋 (必拍清單)</h2>
+                <ul class="text-2xl space-y-4 text-slate-300 font-bold ml-12 list-disc mb-12">
+                    <li><span class="highlight">加熱爐本體</span>：額定功率 (kW)、燃料流量標記。</li>
+                    <li><span class="highlight">空壓機</span>：額定壓力 (kg/cm2)、馬力 (HP/kW)。</li>
+                    <li><span class="highlight">冷卻馬達</span>：銘牌電壓 (V) 與額定電流 (A)。</li>
+                </ul>
+                <h2 class="h2-doc"><i class="fa-solid fa-ear-listen"></i> 偵查重點</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-[#1A5632]/30 rounded-2xl border-2 border-[#7FBC3B]">
+                        <h3 class="font-black text-xl mb-2 text-[#7FBC3B]">聽：氣體噴發</h3>
+                        <p class="text-base text-white">聽聽看接頭處有無嘶嘶聲？每處漏氣每年都在燒錢。</p>
+                    </div>
+                    <div class="p-6 bg-[#1A5632]/30 rounded-2xl border-2 border-[#7FBC3B]">
+                        <h3 class="font-black text-xl mb-2 text-[#7FBC3B]">看：保溫失效</h3>
+                        <p class="text-base text-white">爐壁漆面是否有龜裂或變色？那是廢熱在逃亡。</p>
+                    </div>
+                    <div class="p-6 bg-[#1A5632]/30 rounded-2xl border-2 border-[#7FBC3B]">
+                        <h3 class="font-black text-xl mb-2 text-[#7FBC3B]">感：行為 Bug</h3>
+                        <p class="text-base text-white">沒人作業時，風扇或照明是否開著？這就是駭入點。</p>
+                    </div>
+                </div>
+                <div class="mt-12 p-6 bg-red-900/30 border-2 border-red-500 rounded-xl">
+                    <p class="text-red-500 font-black text-xl mb-2 uppercase">⚠️ 職安禁令</p>
+                    <p class="text-slate-200">嚴禁超越黃色警戒線、嚴禁觸摸任何高溫表面。非接觸觀察是第一課。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW: 雙向同理心地圖 (細節回填)
+             ========================================== -->
+        <div id="v_empathy_dual" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🎭 角色深度偵查：誰會拆掉你的裝置？</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- 阿伯 -->
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-black text-[#7FBC3B]">對象 A：工廠阿伯 (經驗老手)</h3>
+                        <div class="empathy-grid grid grid-cols-2 gap-4">
+                            <div class="empathy-box">
+                                <span class="text-xs text-[#7FBC3B] font-black uppercase block mb-1">他說</span>
+                                <p class="text-sm italic">「碳排是老闆的事，我只要爐子夠熱就好。」</p>
+                            </div>
+                            <div class="empathy-box">
+                                <span class="text-xs text-[#7FBC3B] font-black uppercase block mb-1">他想</span>
+                                <p class="text-sm italic">「這新玩意會害我加班嗎？零件燒壞誰負責？」</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400 font-bold mt-2">結論：對數位系統恐懼，對「火候經驗」自豪。</p>
+                    </div>
+
+                    <!-- 學姊 -->
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-black text-[#7FBC3B]">對象 B：實驗室學姊 (夜貓學霸)</h3>
+                        <div class="empathy-grid grid grid-cols-2 gap-4">
+                            <div class="empathy-box">
+                                <span class="text-xs text-[#7FBC3B] font-black uppercase block mb-1">她說</span>
+                                <p class="text-sm italic">「冷氣開 18 度才爽！忘記關也沒差吧。」</p>
+                            </div>
+                            <div class="empathy-box">
+                                <span class="text-xs text-[#7FBC3B] font-black uppercase block mb-1">她想</span>
+                                <p class="text-sm italic">「好睏... 趕快做完回家。飲水機怎麼又要等？」</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400 font-bold mt-2">結論：追求當下補償性舒適，對電費數據麻木。</p>
+                    </div>
+                </div>
+                <div class="mt-8 p-6 bg-[#1A5632] rounded-2xl text-center">
+                    <p class="text-xl font-black">💡 教學點：同理心是為了做出「不會被使用者拆掉」的設計！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW: W9 Pitch 7頁一頁式下拉 (細節回填 + 空行優化)
+             ========================================== -->
+        <div id="v_pitch_scrolling" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🎤 W9 駭客 Pitch：7 頁制霸完全教案</h1>
+                <p class="p-doc text-[#7FBC3B] mb-12 italic border-b border-[#1A5632] pb-4">向下滾動查看每一頁的實戰重點與「打臉任務」...</p>
+
+                <!-- P1 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P1: 題目與第一現場</span>
+                    <h2 class="text-3xl font-black mb-6">震撼開場：用照片說話</h2>
+                    <p class="p-doc mb-6">不要唸組員清單。第一頁直接放 W4 最燙、最漏氣的局部照片。把評審拉回興南地獄。</p>
+                    <div class="p-6 border-2 border-dashed border-[#7FBC3B] bg-black text-slate-500 italic">
+                        [ 此處放置：空壓機漏氣接頭或加熱爐外殼紅外線照片 ]
+                    </div>
+                </div>
+
+                <!-- P2 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P2: 同理洞察 (人的 Bug)</span>
+                    <h2 class="text-3xl font-black mb-6">看見數據背後的「抗拒」</h2>
+                    <p class="p-doc">列出阿伯或學姊的痛點。說明為什麼傳統節能方法（如硬性規定）會失效。</p>
+                    <p class="mt-6 highlight italic text-xl">「如果你的設計會讓使用者多做一個動作，它就是敗筆。」</p>
+                </div>
+
+                <!-- P3 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P3: 數據診斷 (POV/基線)</span>
+                    <h2 class="text-3xl font-black mb-6">用「碳排 Boss」診斷書定位</h2>
+                    <div class="bg-[#1A5632]/20 p-8 rounded-2xl border-l-8 border-[#7FBC3B]">
+                        <p class="text-2xl font-black leading-relaxed">
+                            我們觀察到 <span class="underline text-[#7FBC3B]">[某空壓機]</span>，面臨 <span class="underline text-[#7FBC3B]">[無效待機]</span> 問題，<br>
+                            因為 <span class="underline text-[#7FBC3B]">[操作路徑過遠]</span>，導致 <span class="underline text-[#7FBC3B]">[年排碳 2 噸]</span>。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- P4 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P4: HMW 與 AI 原始解法</span>
+                    <h2 class="text-3xl font-black mb-6">從問題到創意的跳板</h2>
+                    <p class="p-doc mb-6">展示你們餵給 AI 的指令。並坦誠展示 AI 建議的那些「大而無當」的初步方案。</p>
+                    <p class="text-slate-400 font-bold">範例指令：「我是永續工程師，請針對 20HP 空壓機漏氣提供方案...」</p>
+                </div>
+
+                <!-- P5: 打臉 AI 任務表 (深度回填) -->
+                <div class="pitch-section">
+                    <span class="pitch-label text-white bg-orange-700">P5: 數據核實任務 (打臉 AI)</span>
+                    <h2 class="text-3xl font-black mb-6 italic">這頁是簡報的靈魂！工程師的批判性思考。</h2>
+                    <table>
+                        <thead>
+                            <tr><th>AI 的數據假設</th><th>我們的現場數據核實 (W4-W6)</th><th>核實結論</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>聲稱可省電 30%</td><td>W6 實測深夜本就無人，節能潛力僅 5%</td><td class="text-red-500 font-bold">AI 數據幻覺</td></tr>
+                            <tr><td>建議加保溫層</td><td>W4 照片顯示已裝且溫差小，效益不足</td><td class="text-red-500 font-bold">不具回收價值</td></tr>
+                            <tr><td>建議變頻化</td><td>銘牌顯示設備早已標配變頻馬達</td><td class="text-red-500 font-bold">方案重複無效</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- P6 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P6: 降維實作方案 (Demo 草圖)</span>
+                    <h2 class="text-3xl font-black mb-6">實作承諾：期末你會做出什麼？</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                        <div class="border-2 border-[#7FBC3B] border-dashed h-48 flex items-center justify-center italic text-slate-500">模型草圖預定地 (ESP32/感測器/3D列印)</div>
+                        <div>
+                            <p class="font-bold text-[#7FBC3B]">技術種子選定：</p>
+                            <ul class="text-base list-disc ml-6 mt-4 space-y-2">
+                                <li>選定賽道 C：IoT 感測自動化</li>
+                                <li>硬體：PIR 感測、智慧插座</li>
+                                <li>功能：無人 30 秒自動休眠</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- P7 -->
+                <div class="pitch-section">
+                    <span class="pitch-label">P7: 社會影響力 (SDGs/Nudge)</span>
+                    <h2 class="text-3xl font-black mb-6">工程之外：我們如何「輕推」？</h2>
+                    <p class="p-doc">展示你們的行為設計。例如：在飲水機旁貼有趣的「甦醒按鈕」說明標籤。</p>
+                    <p class="mt-6 text-[#7FBC3B] font-black">SDGs 目標 7、12、13 直接對標。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             其餘視圖 (18週進度、HMW、四大賽道、評分指標)
+             ========================================== -->
+        <div id="v_calendar" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">📅 1-18 週零碳駭客進度指令全表</h1>
+                <table>
+                    <thead>
+                        <tr><th>階段</th><th>日期</th><th>核心任務</th><th>主責</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>解密偵查</td><td>W4 (3/13)</td><td>**企業參訪**：銘牌獵尋、非接觸診斷、安全訓練。</td><td>王</td></tr>
+                        <tr class="bg-[#1A5632]/20"><td>BOSS LEVEL</td><td>W6 (3/28)</td><td>**校園碳盤查工作坊**：全天實作收斂數據、鎖定賽道。</td><td>全</td></tr>
+                        <tr><td>方案煉金</td><td>W9 (4/17)</td><td>**期中 Pitch**：盤查結果與 AI 數據核實報告發表。</td><td>全體</td></tr>
+                        <tr class="bg-[#1A5632]/20"><td>實體鑄造</td><td>W15 (5/29)</td><td>**工作坊 xY**：產出高擬真 DEMO 實體模型。</td><td>王</td></tr>
+                        <tr><td>FINAL EXPO</td><td>W18 (6/19)</td><td>**成果發表**：邀請外審專家，黑科技 Pitch。</td><td>全體</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- v_define_hmw -->
+        <div id="v_define_hmw" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🧪 創意煉金：POV 與 HMW 實踐</h1>
+                <h2 class="h2-doc">1. 碳排 Boss 診斷 (POV)</h2>
+                <div class="bg-[#1A5632]/20 p-8 rounded-2xl border-l-8 border-[#7FBC3B] mb-12 text-2xl font-black leading-relaxed">
+                    我們觀察到 [設備/場域]，遭遇 [數據顯現的浪費] 問題，因為 [行為或邏輯 Bug]，導致 [年排碳增加 X 噸]。
+                </div>
+                <h2 class="h2-doc">2. 駭客 HMW 公式</h2>
+                <div class="p-8 border-4 border-dashed border-[#7FBC3B] rounded-3xl bg-black text-2xl">
+                    我們如何改善 [對象]，以便 [達成數據指標]，且 [避開阻力/麻煩]？
+                </div>
+            </div>
+        </div>
+
+        <!-- v_tracks -->
+        <div id="v_tracks" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">🛤️ 四大賽道：大二學生實作標準</h1>
+                <div class="grid grid-cols-2 gap-8 mb-12">
+                    <div class="p-6 bg-black border-2 border-[#1A5632] rounded-2xl">
+                        <h3 class="text-xl font-black text-[#7FBC3B] mb-2">A. 動力與熱能</h3>
+                        <p class="text-sm">對接機械實務。保溫夾克原型、漏氣聲波偵測盒。</p>
+                    </div>
+                    <div class="p-6 bg-black border-2 border-[#1A5632] rounded-2xl">
+                        <h3 class="text-xl font-black text-[#7FBC3B] mb-2">B. 智慧負載管理</h3>
+                        <p class="text-sm">對接電力排程。負載自動排程 App 介面、智慧插座連動。</p>
+                    </div>
+                    <div class="p-6 bg-black border-2 border-[#1A5632] rounded-2xl">
+                        <h3 class="text-xl font-black text-[#7FBC3B] mb-2">C. IoT 感測自動化</h3>
+                        <p class="text-sm">對接控制組。ESP32 紅外線偵測節能盒、數據看板。</p>
+                    </div>
+                    <div class="p-6 bg-black border-2 border-[#1A5632] rounded-2xl">
+                        <h3 class="text-xl font-black text-[#7FBC3B] mb-2">D. 再生能源微電網</h3>
+                        <p class="text-sm">對接綠能科技。微縮微電網模型、能源切換模擬實作。</p>
+                    </div>
+                </div>
+                <div class="bg-red-900/30 p-10 border-4 border-red-600 rounded-3xl text-center">
+                    <p class="text-2xl font-black italic">「不要試圖解決整間工廠。期末只需證明邏輯能透過一個『會動的模型』運作即可。」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- v_grading -->
+        <div id="v_grading" class="view-content">
+            <div class="doc-container">
+                <h1 class="h1-doc">📝 零碳駭客等級評定指標</h1>
+                <table>
+                    <thead>
+                        <tr><th>維度</th><th>權重</th><th>考核核心</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>數據主權</td><td>30%</td><td>kW 換算無誤，年度基線有照片/銘牌支持。</td></tr>
+                        <tr><td>打臉表現</td><td>20%</td><td>成功拆穿 AI 方案幻覺，並提供對照證據。</td></tr>
+                        <tr><td>同理洞察</td><td>20%</td><td>發現人性 Bug 並設計出「不會煩到人」的方案。</td></tr>
+                        <tr><td>實作可行性</td><td>15%</td><td>期末模型草圖具體，元件型號明確可買到。</td></tr>
+                        <tr><td>敘事戰力</td><td>15%</td><td>唸了定場詩，Q&A 辯護展現自信工程師風範。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="mt-20 py-10 flex justify-between items-center opacity-30 border-t border-slate-900 text-xs font-black uppercase tracking-[5px]">
+        <p>Master Encyclopedia for Prof. Luo | v7.0 FIXED</p>
+        <p>Mission Status: DEPLOYED FOR CLASSROOM</p>
+    </footer>
+
+    <script>
+        function openView(viewId) {
+            const targetView = document.getElementById(viewId);
+            if (!targetView) {
+                console.error("ID 找不到：" + viewId);
+                return;
+            }
+
+            // 隱藏所有視圖
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+            
+            // 顯示目標
+            targetView.classList.add('active');
+            document.getElementById('homeBtn').style.display = 'block';
+            
+            // 滾動到頂部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+            document.getElementById('view_home').classList.add('active');
+            document.getElementById('homeBtn').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
