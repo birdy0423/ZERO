@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body { 
             background-color: #000000; 
@@ -24,7 +27,7 @@
         .neon-border:hover { border-color: #7FBC3B; box-shadow: 0 0 30px rgba(127, 188, 59, 0.4); transform: translateY(-4px); }
 
         /* 字體比例 */
-        .title-main { font-size: 3.5rem; font-weight: 900; line-height: 1.1; }
+        .title-main { font-size: 3.5rem; font-weight: 900; line-height: 1.1; color: #000 !important; }
         .h1-doc { font-size: 2.8rem; font-weight: 900; color: #7FBC3B; border-bottom: 5px solid #1A5632; padding-bottom: 10px; margin-bottom: 25px; }
         .h2-doc { font-size: 2.2rem; font-weight: 900; color: #FFFFFF; margin: 2rem 0 1rem 0; display: flex; align-items: center; gap: 15px; }
         .p-doc { font-size: 1.4rem; line-height: 1.7; color: #e2e8f0; font-weight: 500; }
@@ -68,8 +71,10 @@
     </style>
 </head>
 <body class="hacker-bg p-8">
+    <div id="reactPreludeRoot"></div>
 
-    <button onclick="goHome()" id="homeBtn" class="btn-home"><i class="fa-solid fa-house"></i> 返回中心</button>
+    <div id="mainContent" class="hidden">
+        <button onclick="navStep()" id="navBtn" class="btn-home"><i class="fa-solid fa-house"></i> 返回中心</button>
 
     <div class="max-w-7xl mx-auto">
         
@@ -98,7 +103,7 @@
                     <div onclick="openView('v_dt_full')" class="neon-border bg-[#0a0a0a] p-8">
                         <i class="fa-solid fa-diagram-project text-4xl text-[#7FBC3B] mb-4"></i>
                         <h3 class="text-xl font-black mb-2">DT 五步完整整合</h3>
-                        <p class="text-slate-400 text-sm font-bold">【細節回填】參訪與數據的設計轉化邏輯。</p>
+                        <p class="text-slate-400 text-sm font-bold">參訪與數據的設計轉化邏輯。</p>
                     </div>
                 </div>
                 <!-- Column 02 -->
@@ -107,12 +112,12 @@
                     <div onclick="openView('v_visit')" class="neon-border bg-[#0a0a0a] p-8">
                         <i class="fa-solid fa-industry text-4xl text-[#7FBC3B] mb-4"></i>
                         <h3 class="text-xl font-black mb-2">工廠參訪手冊</h3>
-                        <p class="text-slate-400 text-sm font-bold">【配色修復】銘牌獵尋、非接觸診斷與安全清單。</p>
+                        <p class="text-slate-400 text-sm font-bold">銘牌獵尋、非接觸診斷與安全清單。</p>
                     </div>
                     <div onclick="openView('v_empathy_dual')" class="neon-border bg-[#0a0a0a] p-8">
                         <i class="fa-solid fa-mask text-4xl text-[#7FBC3B] mb-4"></i>
                         <h3 class="text-xl font-black mb-2">雙向同理心地圖</h3>
-                        <p class="text-slate-400 text-sm font-bold">【細節回填】阿伯 vs 實驗室學姊。</p>
+                        <p class="text-slate-400 text-sm font-bold"> 阿伯 vs 實驗室學姊。</p>
                     </div>
                     <div onclick="openView('v_define_hmw')" class="neon-border bg-[#0a0a0a] p-8">
                         <i class="fa-solid fa-flask text-4xl text-[#7FBC3B] mb-4"></i>
@@ -350,14 +355,14 @@
                 <h1 class="h1-doc">📅 1-18 週零碳特工隊進度指令全表</h1>
                 <table>
                     <thead>
-                        <tr><th>階段</th><th>日期</th><th>核心任務</th><th>主責</th></tr>
+                        <tr><th>階段</th><th>日期</th><th>核心任務</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>解密偵查</td><td>W4 (3/13)</td><td><strong>企業參訪</strong>：銘牌獵尋、非接觸診斷、安全訓練。</td><td>王</td></tr>
-                        <tr class="bg-[#1A5632]/20"><td>BOSS LEVEL</td><td>W6 (3/28)</td><td><strong>校園碳盤查工作坊</strong>：全天實作收斂數據、鎖定賽道。</td><td>全</td></tr>
-                        <tr><td>方案煉金</td><td>W9 (4/17)</td><td><strong>期中 Pitch</strong>：盤查結果與 AI 數據核實報告發表。</td><td>全體</td></tr>
-                        <tr class="bg-[#1A5632]/20"><td>實體鑄造</td><td>W15 (5/29)</td><td><strong>工作坊 xY</strong>：產出高擬真 DEMO 實體模型。</td><td>王</td></tr>
-                        <tr><td>FINAL EXPO</td><td>W18 (6/19)</td><td><strong>成果發表</strong>：邀請外審專家，黑科技 Pitch。</td><td>全體</td></tr>
+                        <tr><td>解密偵查</td><td>W4 (3/13)</td><td><strong>企業參訪</strong>：銘牌獵尋、非接觸診斷、安全訓練。</td></tr>
+                        <tr class="bg-[#1A5632]/20"><td>BOSS LEVEL</td><td>W6 (3/28)</td><td><strong>校園碳盤查工作坊</strong>：全天實作收斂數據、鎖定賽道。</td></tr>
+                        <tr><td>方案煉金</td><td>W9 (4/17)</td><td><strong>期中 Pitch</strong>：盤查結果與 AI 數據核實報告發表。</td></tr>
+                        <tr class="bg-[#1A5632]/20"><td>實體鑄造</td><td>W15 (5/29)</td><td><strong>工作坊 xY</strong>：產出高擬真 DEMO 實體模型。</td></tr>
+                        <tr><td>FINAL EXPO</td><td>W18 (6/19)</td><td><strong>成果發表</strong>：邀請外審專家，黑科技 Pitch。</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -427,12 +432,307 @@
 
     </div>
 
-    <footer class="mt-20 py-10 flex justify-between items-center opacity-30 border-t border-slate-900 text-xs font-black uppercase tracking-[5px]">
-        <p>Master Encyclopedia for Prof. Luo | v7.0 FIXED</p>
-        <p>Mission Status: DEPLOYED FOR CLASSROOM</p>
-    </footer>
+        <footer class="mt-20 py-10 flex justify-between items-center opacity-30 border-t border-slate-900 text-xs font-black uppercase tracking-[5px]">
+            <p>Master Encyclopedia for Prof. Luo | v7.0 FIXED</p>
+            <p>Mission Status: DEPLOYED FOR CLASSROOM</p>
+        </footer>
+    </div>
+
+    <script type="text/babel">
+    const { useEffect, useState } = React;
+
+    const Icon = ({ label }) => (
+      <span className="inline-flex items-center justify-center text-2xl" aria-hidden="true">{label}</span>
+    );
+    const Shield = () => <Icon label="🛡️" />;
+    const Camera = () => <Icon label="📷" />;
+    const Swords = () => <Icon label="⚔️" />;
+    const Zap = () => <Icon label="⚡" />;
+    const Radio = () => <Icon label="📡" />;
+    const Terminal = () => <Icon label="💻" />;
+
+    const MISSION_DATA = [
+      { phase: 1, week: "01-03", title: "特工組建：感官覺醒", icon: Shield, color: "#7FBC3B", intel: "透過 SDGs 桌遊看見全球能耗危機。本階段重點：組成 6 人特工分隊。", evidence: "修課須知" },
+      { phase: 2, week: "04-06", title: "潛入現場：數據採證", icon: Camera, color: "#7FBC3B", intel: "潛入興光工廠南臺校園採集銘牌數據。將現場照片轉化為 Excel 數據編碼，拿回數據主權。", evidence: "碳盤查原始鑑別表" },
+      { phase: 3, week: "08-09", title: "智取 AI：主權對決", icon: Swords, color: "#f59e0b", intel: "進入 Xy 煉金工作坊。利用 AI 生成解法，並在 W9 發表會公開挑戰 AI 的幻覺建議。", evidence: "打臉 AI 對照簡報" },
+      { phase: 4, week: "11-14", title: "尚未解鎖", icon: Zap, color: "#3b82f6", status: "locked", intel: "尚未解鎖", evidence: "尚未解鎖" },
+      { phase: 5, week: "15-18", title: "尚未解鎖", icon: Radio, color: "#ef4444", status: "locked", intel: "尚未解鎖", evidence: "尚未解鎖" }
+    ];
+
+    const TeaserScreen = ({ onFinish }) => {
+      const [step, setStep] = useState(0);
+      const flashText = [
+        { text: "MISSION START", color: "#7FBC3B" },
+        { text: "FIELD AUDIT", color: "#FFFFFF" },
+        { text: "數據主權", color: "#7FBC3B" },
+        { text: "打臉 AI", color: "#FFFFFF" },
+        { text: "NEXT ZERO", color: "#7FBC3B" },
+        { text: "特工出擊", color: "#7FBC3B" }
+      ];
+
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setStep(prev => {
+            if (prev >= flashText.length - 1) {
+              clearInterval(timer);
+              setTimeout(onFinish, 1000);
+              return prev;
+            }
+            return prev + 1;
+          });
+        }, 1200);
+        return () => clearInterval(timer);
+      }, [onFinish]);
+
+      return (
+        <div className="fixed inset-0 bg-black z-[100] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 opacity-10" style={{backgroundImage: "radial-gradient(#1A5632 1px, transparent 1px)", backgroundSize: "30px 30px"}}></div>
+          <div className="text-center animate-pulse">
+            <h2 
+              className="text-6xl md:text-9xl font-black italic tracking-tighter transition-all duration-300 transform scale-110"
+              style={{ color: flashText[step].color }}
+            >
+              {flashText[step].text}
+            </h2>
+          </div>
+          <div className="absolute bottom-10 left-0 w-full h-1 bg-[#1A5632]">
+            <div className="h-full bg-[#7FBC3B] transition-all duration-[8000ms] ease-linear" style={{ width: "100%" }}></div>
+          </div>
+        </div>
+      );
+    };
+
+    const App = () => {
+      const [view, setView] = useState("teaser"); // teaser, login, dashboard, done
+      const [agentName, setAgentName] = useState("");
+      const [activeTab, setActiveTab] = useState("map");
+      const [selectedMission, setSelectedMission] = useState(null);
+
+      useEffect(() => {
+        window.__setPreludeView = setView;
+        return () => {
+          if (window.__setPreludeView === setView) {
+            delete window.__setPreludeView;
+          }
+        };
+      }, []);
+
+      useEffect(() => {
+        if (view !== "done") return;
+        const preludeRoot = document.getElementById("reactPreludeRoot");
+        const mainContent = document.getElementById("mainContent");
+        const navBtn = document.getElementById("navBtn");
+        if (preludeRoot) preludeRoot.classList.add("hidden");
+        if (mainContent) mainContent.classList.remove("hidden");
+        if (navBtn) {
+          navBtn.style.display = "block";
+          navBtn.dataset.mode = "to-dashboard";
+          navBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> 返回上一步';
+        }
+      }, [view]);
+
+      if (view === "teaser") {
+        return <TeaserScreen onFinish={() => setView("login")} />;
+      }
+
+      if (view === "login") {
+        return (
+          <div className="min-h-screen bg-[#F9F9F4] flex items-center justify-center p-6 font-sans">
+            <div className="max-w-md w-full p-10 bg-white rounded-[3rem] border-2 border-[#1A5632] shadow-2xl text-center">
+              <div className="text-[#1A5632] mx-auto mb-6 text-5xl"><Shield /></div>
+              <h1 className="text-3xl font-black text-[#1A5632] italic mb-2 tracking-tighter uppercase">Squad Deployment</h1>
+              <p className="text-[#1A5632] font-bold mb-10">偵測到存取請求，請輸入特工代號</p>
+              <input 
+                type="text" 
+                placeholder="例如: Agent_STUST..." 
+                className="w-full bg-slate-50 border-2 border-slate-100 text-[#1A5632] placeholder:text-[#7FBC3B] rounded-2xl p-5 text-center text-xl font-bold mb-8 focus:border-[#7FBC3B] outline-none"
+                value={agentName}
+                onChange={(e) => setAgentName(e.target.value)}
+              />
+              <button 
+                onClick={() => agentName && setView("dashboard")}
+                className="w-full bg-[#1A5632] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#7FBC3B] transition-all flex items-center justify-center gap-3 shadow-lg active:scale-95"
+              >
+                <Terminal />
+                初始化特工任務
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      const renderIntelContent = (mission, onClose) => (
+        <div className="animate-in zoom-in-95 duration-500 flex flex-col h-full">
+          <div className="flex justify-between items-start mb-10">
+            <div className="px-3 py-1 bg-[#1A5632] text-white text-[10px] font-black uppercase tracking-widest rounded">Intelligence</div>
+            <button onClick={onClose} className="text-slate-300 hover:text-[#1A5632]">✕</button>
+          </div>
+          <h3 className="text-3xl font-black text-[#1A5632] italic mb-6 leading-tight">{mission.title}</h3>
+          <p className="text-lg font-bold text-slate-500 leading-relaxed mb-10">{mission.intel}</p>
+          <div className="mt-auto p-6 bg-[#F9F9F4] rounded-2xl border border-slate-100">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">任務關鍵證物</p>
+            <p className="font-black text-[#1A5632]">{mission.evidence}</p>
+          </div>
+        </div>
+      );
+
+      if (view === "dashboard") {
+        return (
+          <div className="min-h-screen bg-[#F9F9F4] font-sans text-slate-900 pb-20">
+            <header className="bg-white border-b-2 border-[#1A5632] p-6 sticky top-0 z-50">
+              <div className="max-w-7xl mx-auto flex justify-between items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-4">
+                  <div className="bg-[#1A5632] p-2 rounded-lg text-[#7FBC3B]"><Shield /></div>
+                  <div>
+                    <h1 className="text-xl font-black text-[#1A5632] italic uppercase tracking-tighter leading-none">
+                      Mission: <span className="text-[#7FBC3B]">Next Zero 2.0</span>
+                    </h1>
+                    <p className="text-[20px] font-mono text-slate-400 mt-1 uppercase tracking-widest">Logged as: {agentName}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="hidden md:flex gap-4">
+                    {["map", "intel", "rules"].map(tab => (
+                      <button 
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${activeTab === tab ? "bg-[#1A5632] text-white" : "text-slate-400 hover:text-[#1A5632]"}`}
+                      >
+                        {tab === "map" ? "任務地圖" : tab === "intel" ? "績效考核" : "基地守則"}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setView("done")}
+                    className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-widest bg-[#7FBC3B] text-black hover:bg-[#1A5632] hover:text-white transition-all"
+                  >
+                    進入主頁
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <main className="max-w-7xl mx-auto p-6 lg:p-12 flex flex-col lg:flex-row gap-12">
+              <div className="flex-1">
+                {activeTab === "map" && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500">
+                    <h2 className="text-3xl font-black text-[#1A5632] mb-8 border-l-8 border-[#7FBC3B] pl-6">18 週戰略路徑</h2>
+                    {MISSION_DATA.map((m, idx) => (
+                      <div 
+                        key={idx}
+                        onClick={() => setSelectedMission(m)}
+                        className={`group relative flex items-center p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                          m.status === "locked" 
+                            ? "bg-slate-50 border-slate-100 opacity-40 grayscale" 
+                            : "bg-white border-slate-100 hover:border-[#1A5632] hover:shadow-xl"
+                        }`}
+                      >
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center mr-6 ${m.status === "locked" ? "bg-slate-200" : "bg-[#EAF5E5] text-[#1A5632]"}`}>
+                          <m.icon />
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-[10px] font-black text-[#7FBC3B] uppercase tracking-widest">Week {m.week}</span>
+                          <h3 className="text-lg font-black text-[#1A5632]">{m.title}</h3>
+                        </div>
+                        <span className="text-slate-300 group-hover:text-[#1A5632] transition-colors">›</span>
+                      </div>
+                    ))}
+
+                    <div className="lg:hidden">
+                      {selectedMission ? (
+                        <div className="mt-6 p-6 rounded-[3rem] border-2 border-[#1A5632] bg-white shadow-2xl flex flex-col">
+                          {renderIntelContent(selectedMission, () => setSelectedMission(null))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "intel" && (
+                  <div className="bg-white p-10 rounded-[3rem] border-2 border-[#1A5632] shadow-xl animate-in fade-in duration-500">
+                    <h2 className="text-3xl font-black text-[#1A5632] mb-10 flex items-center gap-4">📊 績效考核標準</h2>
+                    <div className="space-y-8">
+                      {[
+                        { label: "數據主權 (盤查/計算)", val: 30, color: "#1A5632" },
+                        { label: "邏輯攻防 (打臉 AI)", val: 20, color: "#7FBC3B" },
+                        { label: "科普影響 (影片敘事)", val: 20, color: "#1A5632" },
+                        { label: "平時偵查任務", val: 30, color: "#7FBC3B" }
+                      ].map((item, i) => (
+                        <div key={i}>
+                          <div className="flex justify-between mb-2">
+                            <span className="font-bold text-slate-600">{item.label}</span>
+                            <span className="font-black text-[#1A5632]">{item.val}%</span>
+                          </div>
+                          <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                            <div className="h-full transition-all duration-1000" style={{ width: `${item.val}%`, backgroundColor: item.color }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "rules" && (
+                  <div className="bg-white p-10 rounded-[3rem] border-2 border-red-100 shadow-xl animate-in fade-in duration-500">
+                    <h2 className="text-3xl font-black text-red-600 mb-10 flex items-center gap-4">⚠️ 基地核心守則</h2>
+                    <ul className="space-y-6">
+                      <li className="flex gap-4 p-4 bg-red-50 rounded-xl"><span className="font-black text-red-600">01</span> <p className="font-bold text-slate-700">缺席超過 3 次任務者，將取消特工資格。</p></li>
+                      <li className="flex gap-4 p-4 bg-red-50 rounded-xl"><span className="font-black text-red-600">02</span> <p className="font-bold text-slate-700">嚴禁使用 AI 虛構數據，抓到者該次任務為 0 分。</p></li>
+                      <li className="flex gap-4 p-4 bg-red-50 rounded-xl"><span className="font-black text-red-600">03</span> <p className="font-bold text-slate-700">328一日校園碳盤查任務必參與。</p></li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {activeTab === "map" && (
+                <div className="lg:w-[420px] hidden lg:block">
+                  <div className="sticky top-32 p-10 rounded-[3rem] border-2 border-[#1A5632] bg-white min-h-[500px] shadow-2xl flex flex-col">
+                    {selectedMission ? (
+                      renderIntelContent(selectedMission, () => setSelectedMission(null))
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-center py-20 opacity-20">
+                        <div className="text-5xl mb-6 text-[#1A5632]">🎯</div>
+                        <p className="text-xl font-black italic text-[#1A5632]">請選擇任務節點<br/>以讀取情報</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </main>
+
+            <footer className="text-center opacity-30 mt-20 p-10 font-black uppercase tracking-[0.5em] text-xs">
+              Next Zero Task Force | Vision Enhanced Hub v10.0
+            </footer>
+          </div>
+        );
+      }
+
+      return null;
+    };
+
+    ReactDOM.createRoot(document.getElementById("reactPreludeRoot")).render(<App />);
+    </script>
 
     <script>
+        function navStep() {
+            const preludeRoot = document.getElementById("reactPreludeRoot");
+            const mainContent = document.getElementById("mainContent");
+            const navBtn = document.getElementById("navBtn");
+            if (!preludeRoot || !mainContent || !navBtn) return;
+
+            const mode = navBtn.dataset.mode || "to-home";
+            if (mode === "to-home") {
+                goHome();
+                return;
+            }
+
+            mainContent.classList.add("hidden");
+            preludeRoot.classList.remove("hidden");
+            if (window.__setPreludeView) window.__setPreludeView("dashboard");
+            navBtn.style.display = "none";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
         function openView(viewId) {
             const targetView = document.getElementById(viewId);
             if (!targetView) {
@@ -445,7 +745,12 @@
             
             // 顯示目標
             targetView.classList.add('active');
-            document.getElementById('homeBtn').style.display = 'block';
+            const navBtn = document.getElementById('navBtn');
+            if (navBtn) {
+                navBtn.style.display = 'block';
+                navBtn.dataset.mode = 'to-home';
+                navBtn.innerHTML = '<i class="fa-solid fa-house"></i> 返回中心';
+            }
             
             // 滾動到頂部
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -454,7 +759,12 @@
         function goHome() {
             document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
             document.getElementById('view_home').classList.add('active');
-            document.getElementById('homeBtn').style.display = 'none';
+            const navBtn = document.getElementById('navBtn');
+            if (navBtn) {
+                navBtn.style.display = 'block';
+                navBtn.dataset.mode = 'to-dashboard';
+                navBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> 返回上一步';
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
